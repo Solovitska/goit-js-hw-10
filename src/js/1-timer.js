@@ -1,18 +1,22 @@
 
+
 import flatpickr from 'flatpickr';
+
 import 'flatpickr/dist/flatpickr.min.css';
+
 import iziToast from 'izitoast';
+
 import 'izitoast/dist/css/iziToast.min.css';
 
-const newButtonStart = document.querySelector('[data-start]');
-const newDaysData = document.querySelector('[data-days]');
-const newHoursData = document.querySelector('[data-hours]');
-const newMinutesData = document.querySelector('[data-minutes]');
-const newSecondsData = document.querySelector('[data-seconds]');
+const buttonStart = document.querySelector('[data-start]');
+const daysData = document.querySelector('[data-days]');
+const hoursData = document.querySelector('[data-hours]');
+const minutesData = document.querySelector('[data-minutes]');
+const secondsData = document.querySelector('[data-seconds]');
 
-const newDatetimeInput = document.querySelector('#datetime-picker');
+const datatimeInput = document.querySelector('#datetime-picker');
 
-let newUserSelectedDate;
+let userSelectedDate;
 
 const options = {
   enableTime: true,
@@ -21,7 +25,7 @@ const options = {
   minuteIncrement: 1,
   onClose([selectedDates]) {
     if (selectedDates < options.defaultDate) {
-      newButtonStart.disabled = true;
+      buttonStart.disabled = true;
       iziToast.show({
         message: 'Please choose a date in the future',
         backgroundColor: 'rgb(236, 56, 56)',
@@ -29,34 +33,34 @@ const options = {
         position: 'topCenter',
       });
     } else {
-      newButtonStart.disabled = false;
-      newUserSelectedDate = selectedDates.getTime();
+      buttonStart.disabled = false;
+      userSelectedDate = selectedDates.getTime();
     }
   },
 };
 
-flatpickr(newDatetimeInput, options);
+flatpickr(datatimeInput, options);
 
-newButtonStart.addEventListener('click', handlerBtnStart);
+buttonStart.addEventListener('click', handlerBtnStart);
 
 function handlerBtnStart() {
-  if (newUserSelectedDate > Date.now()) {
+  if (userSelectedDate > Date.now()) {
     const timerCalc = () => {
       outputsUpdate(
-        [newDaysData, newHoursData, newMinutesData, newSecondsData],
-        convertMs(newUserSelectedDate - Date.now())
+        [daysData, hoursData, minutesData, secondsData],
+        convertMs(userSelectedDate - Date.now())
       );
       if (
-        newUserSelectedDate - 1000 < Date.now() &&
-        newSecondsData.textContent === '00'
+        userSelectedDate - 1000 < Date.now() &&
+        secondsData.textContent === '00'
       )
         clearInterval(interval);
     };
     timerCalc();
     const interval = setInterval(timerCalc, 1000);
-    newButtonStart.disabled = true;
-    newDatetimeInput.disabled = true;
-    newButtonStart.dataset.start = 'started';
+    buttonStart.disabled = true;
+    datatimeInput.disabled = true;
+    buttonStart.dataset.start = 'started';
   } else {
     iziToast.show({
       message: 'Please choose a date in the future',
@@ -64,7 +68,7 @@ function handlerBtnStart() {
       messageColor: '#FFF',
       position: 'topCenter',
     });
-    newButtonStart.disabled = true;
+    buttonStart.disabled = true;
   }
 }
 
@@ -72,13 +76,13 @@ const outputUpdate = (output, time) => {
   output.textContent = time.toString().padStart(2, '0');
 };
 const outputsUpdate = (
-  [newDaysData, newHoursData, newMinutesData, newSecondsData],
+  [daysData, hoursData, minutesData, secondsData],
   { days, hours, minutes, seconds }
 ) => {
-  outputUpdate(newDaysData, days);
-  outputUpdate(newHoursData, hours);
-  outputUpdate(newMinutesData, minutes);
-  outputUpdate(newSecondsData, seconds);
+  outputUpdate(daysData, days);
+  outputUpdate(hoursData, hours);
+  outputUpdate(minutesData, minutes);
+  outputUpdate(secondsData, seconds);
 };
 
 function convertMs(ms) {
