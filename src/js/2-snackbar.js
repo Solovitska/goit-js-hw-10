@@ -1,29 +1,28 @@
 
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-const formElement = document.querySelector('.form');
-const inputDelayElement = formElement.elements.delay;
-const radioStateElement = formElement.elements.state;
+const form = document.querySelector('.form');
+const inputDelay = form.elements.delay;
+const radioState = form.elements.state;
 
-formElement.addEventListener('submit', handleFormSubmit);
+form.addEventListener('submit', handlerSubmit);
 
-function handleFormSubmit(event) {
+function handlerSubmit(event) {
   event.preventDefault();
-  delayHandler(inputDelayElement.value);
+  delayHandler(inputDelay.value);
   event.target.reset();
 }
 
 function delayHandler(delay) {
   if (delay > 0) {
-    const promise = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (radioStateElement.value === 'fulfilled') {
-          resolve(`✅ Fulfilled promise in ${delay}ms`);
-        } else {
-          reject(`❌ Rejected promise in ${delay}ms`);
-        }
-      }, delay);
-    });
+    const promise =
+      radioState.value === 'fulfilled'
+        ? Promise.resolve(`✅ Fulfilled promise in ${delay}ms`)
+        : Promise.reject(`❌ Rejected promise in ${delay}ms`);
+
+    setTimeout(() => {
+      promise;
+    }, delay);
 
     promise
       .then(value => {
@@ -48,8 +47,4 @@ function delayHandler(delay) {
     });
   }
 }
-
-
-
-
 
