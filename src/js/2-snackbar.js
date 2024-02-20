@@ -15,14 +15,15 @@ function handleFormSubmit(event) {
 
 function delayHandler(delay) {
   if (delay > 0) {
-    const promise =
-      radioStateElement.value === 'fulfilled'
-        ? Promise.resolve(`✅ Fulfilled promise in ${delay}ms`)
-        : Promise.reject(`❌ Rejected promise in ${delay}ms`);
-
-    setTimeout(() => {
-      promise;
-    }, delay);
+    const promise = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (radioStateElement.value === 'fulfilled') {
+          resolve(`✅ Fulfilled promise in ${delay}ms`);
+        } else {
+          reject(`❌ Rejected promise in ${delay}ms`);
+        }
+      }, delay);
+    });
 
     promise
       .then(value => {
@@ -42,8 +43,12 @@ function delayHandler(delay) {
   } else {
     iziToast.show({
       message: 'Value must be more than 0',
-      backgroundColor: 'light-grey',
+      backgroundColor: 'lightgrey',
       position: 'topCenter',
     });
   }
 }
+
+
+
+
