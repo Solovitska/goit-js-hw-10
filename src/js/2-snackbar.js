@@ -1,9 +1,9 @@
 
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-const formElement = document.querySelector('.form');
-const inputDelayElement = formElement.elements.delay;
-const radioStateElement = formElement.elements.state;
+const form = document.querySelector('.form');
+const inputDelay = form.elements.delay;
+const radioState = form.elements.state;
 
 form.addEventListener('submit', handlerSubmit);
 
