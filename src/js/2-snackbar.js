@@ -22,28 +22,26 @@ function delayHandler(delay) {
         : Promise.reject(`❌ Rejected promise in ${delay}ms`);
 
     setTimeout(() => {
-      promise;
+      promise
+        .then(value => {
+          iziToast.show({
+            message: value,
+            backgroundColor: 'rgba(82, 223, 79, 0.3)',
+            position: 'topCenter',
+          });
+        })
+        .catch(value => {
+          iziToast.show({
+            message: value,
+            backgroundColor: 'rgba(223, 79, 79, 0.3)',
+            position: 'topCenter',
+          });
+        });
     }, delay);
-
-    promise
-      .then(value => {
-        iziToast.show({
-          message: value,
-          backgroundColor: 'rgba(82, 223, 79, 0.3)',
-          position: 'topCenter',
-        });
-      })
-      .catch(value => {
-        iziToast.show({
-          message: value,
-          backgroundColor: 'rgba(223, 79, 79, 0.3)',
-          position: 'topCenter',
-        });
-      });
   } else {
     iziToast.show({
       message: 'Value must be more than 0',
-      backgroundColor: 'light-grey',
+      backgroundColor: 'lightgrey',
       position: 'topCenter',
     });
   }
