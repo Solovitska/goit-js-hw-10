@@ -1,4 +1,3 @@
-
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
@@ -6,43 +5,56 @@ const form = document.querySelector('.form');
 const inputDelay = form.elements.delay;
 const radioState = form.elements.state;
 
-form.addEventListener('submit', handlerSubmit);
+form.addEventListener('submit', handleSubmit);
 
-function handlerSubmit(event) {
+function handleSubmit(event) {
   event.preventDefault();
-  delayHandler(inputDelay.value);
-  event.target.reset();
+  const delay = inputDelay.value;
+
+  if (isValidDelay(delay)) {
+    processFormSubmission(delay);
+    event.target.reset();
+  } else {
+    showErrorMessage('Value must be more than 0');
+  }
 }
 
-function delayHandler(delay) {
-  if (delay > 0) {
-    const promise =
-      radioState.value === 'fulfilled'
-        ? Promise.resolve(`✅ Fulfilled promise in ${delay}ms`)
-        : Promise.reject(`❌ Rejected promise in ${delay}ms`);
+function isValidDelay(delay) {
+  return delay > 0;
+}
 
-    setTimeout(() => {
-      promise
-        .then(value => {
-          iziToast.show({
-            message: value,
-            backgroundColor: 'rgba(82, 223, 79, 0.3)',
-            position: 'topCenter',
-          });
-        })
-        .catch(value => {
-          iziToast.show({
-            message: value,
-            backgroundColor: 'rgba(223, 79, 79, 0.3)',
-            position: 'topCenter',
-          });
-        });
-    }, delay);
-  } else {
-    iziToast.show({
-      message: 'Value must be more than 0',
-      backgroundColor: 'lightgrey',
-      position: 'topCenter',
+function processFormSubmission(delay) {
+  const promise = createPromise(delay);
+
+  setTimeout(() => {
+    handlePromiseResult(promise);
+  }, delay);
+}
+
+function createPromise(delay) {
+  return radioState.value === 'fulfilled'
+    ? Promise.resolve(`✅ Fulfilled promise in ${delay}ms`)
+    : Promise.reject(`❌ Rejected promise in ${delay}ms`);
+}
+
+function handlePromiseResult(promise) {
+  promise
+    .then(value => {
+      showNotification(value, 'rgba(82, 223, 79, 0.3)');
+    })
+    .catch(value => {
+      showNotification(value, 'rgba(223, 79, 79, 0.3)');
     });
-  }
+}
+
+function showNotification(message, backgroundColor) {
+  iziToast.show({
+    message,
+    backgroundColor,
+    position: 'topCenter',
+  });
+}
+
+function showErrorMessage(message) {
+  showNotification(message, 'lightgrey');
 }
